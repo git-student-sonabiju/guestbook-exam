@@ -63,20 +63,23 @@ function App() {
   }
 
   return (
-    <main>
-      <h1>Guestbook</h1>
+    <main className="page">
+      <header className="hero">
+        <h1>Guestbook</h1>
+        <p className="hero-subtitle">Sign the book and say hello.</p>
+      </header>
       <MessageForm onPost={handlePost} />
       {error && (
-        <p role="alert" className="error">
+        <p role="alert" className="banner-error">
           {error}
         </p>
       )}
       {loading ? (
-        <p>Loading messages...</p>
+        <p className="state">Loading messages...</p>
       ) : messages.length === 0 ? (
-        <p>No messages yet.</p>
+        <p className="state">No messages yet.</p>
       ) : (
-        <ul>
+        <ul className="message-list">
           {messages.map((message) => (
             <MessageItem key={message.id} message={message} onSave={handleSave} onDelete={handleDelete} />
           ))}

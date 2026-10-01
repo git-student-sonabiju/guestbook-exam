@@ -39,6 +39,15 @@ describe('MessageForm', () => {
     expect(onPost).not.toHaveBeenCalled()
   })
 
+  it('counts characters as the user types', async () => {
+    render(<MessageForm onPost={vi.fn()} />)
+
+    expect(screen.getByText('0/200')).toBeInTheDocument()
+    await userEvent.type(screen.getByLabelText('Message'), 'Hello')
+
+    expect(screen.getByText('5/200')).toBeInTheDocument()
+  })
+
   it('shows a validation error when the message is over 200 characters', async () => {
     const onPost = vi.fn()
     render(<MessageForm onPost={onPost} />)
