@@ -36,6 +36,16 @@ describe('MessageItem', () => {
     expect(screen.queryByText('(edited)')).not.toBeInTheDocument()
   })
 
+  it('shows a whole emoji as the avatar when the name starts with one', () => {
+    const { container } = render(
+      <ul>
+        <MessageItem message={{ ...message, name: '😀Bob' }} onSave={vi.fn()} onDelete={vi.fn()} />
+      </ul>,
+    )
+
+    expect(container.querySelector('.avatar')).toHaveTextContent('😀')
+  })
+
   it('shows the edited label when the message has been updated', () => {
     renderItem({ updatedAt: '2026-10-01T11:00:00Z' })
 

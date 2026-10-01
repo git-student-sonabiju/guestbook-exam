@@ -39,7 +39,7 @@ export function MessageItem({ message, onSave, onDelete }: MessageItemProps) {
   return (
     <li className="card message">
       <div className="avatar" aria-hidden="true">
-        {message.name.trim().charAt(0).toUpperCase()}
+        {Array.from(message.name.trim())[0]?.toUpperCase() ?? '?'}
       </div>
       <div className="message-body">
         <header className="message-header">

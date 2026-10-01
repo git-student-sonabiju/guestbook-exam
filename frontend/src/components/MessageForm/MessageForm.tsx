@@ -46,13 +46,16 @@ export function MessageForm({ onPost }: MessageFormProps) {
           className="input textarea"
           placeholder="Say something nice..."
           rows={3}
+          aria-describedby="message-counter"
+          aria-invalid={overLimit}
           value={text}
           onChange={(event) => setText(event.target.value)}
         />
       </label>
       <div className="compose-footer">
-        <span className={overLimit ? 'counter counter-over' : 'counter'}>
+        <span id="message-counter" className={overLimit ? 'counter counter-over' : 'counter'}>
           {text.length}/{MAX_TEXT_LENGTH}
+          {overLimit && ' - too long'}
         </span>
         <button className="btn btn-primary" type="submit" disabled={submitting}>
           Post

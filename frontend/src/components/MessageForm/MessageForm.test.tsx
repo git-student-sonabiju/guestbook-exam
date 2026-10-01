@@ -46,6 +46,17 @@ describe('MessageForm', () => {
     await userEvent.type(screen.getByLabelText('Message'), 'Hello')
 
     expect(screen.getByText('5/200')).toBeInTheDocument()
+    expect(screen.getByLabelText('Message')).toHaveAccessibleDescription('5/200')
+  })
+
+  it('says the message is too long once it passes the limit', async () => {
+    render(<MessageForm onPost={vi.fn()} />)
+
+    await userEvent.click(screen.getByLabelText('Message'))
+    await userEvent.paste('a'.repeat(201))
+
+    expect(screen.getByLabelText('Message')).toHaveAccessibleDescription('201/200 - too long')
+    expect(screen.getByLabelText('Message')).toBeInvalid()
   })
 
   it('shows a validation error when the message is over 200 characters', async () => {

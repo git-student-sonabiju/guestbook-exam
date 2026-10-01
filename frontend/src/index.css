@@ -3,12 +3,15 @@
   --bg-accent: #e9e3fb;
   --surface: #ffffff;
   --text: #1f1b2d;
-  --muted: #6b6680;
+  --muted: #5d5872;
   --border: #e4e0ef;
   --primary: #6d4aff;
   --primary-hover: #5a37ec;
+  --primary-solid: #6d4aff;
+  --primary-solid-hover: #5a37ec;
   --primary-soft: #efeaff;
-  --danger: #d6336c;
+  --danger: #c2255c;
+  --danger-solid: #c2255c;
   --danger-soft: #fdecf2;
   --shadow: 0 1px 2px rgb(31 27 45 / 6%), 0 8px 24px rgb(31 27 45 / 6%);
   --radius: 14px;
@@ -25,8 +28,11 @@
     --border: #312c44;
     --primary: #8b70ff;
     --primary-hover: #a08bff;
+    --primary-solid: #6f52f0;
+    --primary-solid-hover: #5f43e0;
     --primary-soft: #2a2343;
     --danger: #f06595;
+    --danger-solid: #c2255c;
     --danger-soft: #3a1f2b;
     --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 25%);
     color-scheme: dark;
@@ -63,10 +69,16 @@ body {
   margin: 0;
   font-size: clamp(2rem, 6vw, 2.75rem);
   letter-spacing: -0.02em;
-  background: linear-gradient(90deg, var(--primary), var(--danger));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--primary);
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero h1 {
+    background: linear-gradient(90deg, var(--primary), var(--danger));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 .hero-subtitle {
@@ -112,13 +124,13 @@ body {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 10px;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s;
 }
 
-.input:focus {
-  outline: none;
+.input:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 .textarea {
@@ -159,7 +171,7 @@ body {
 }
 
 .btn:focus-visible {
-  outline: 3px solid var(--primary-soft);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -174,12 +186,12 @@ body {
 }
 
 .btn-primary {
-  background: var(--primary);
+  background: var(--primary-solid);
   color: #fff;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--primary-hover);
+  background: var(--primary-solid-hover);
 }
 
 .btn-ghost {
@@ -189,7 +201,7 @@ body {
 }
 
 .btn-ghost:hover {
-  color: var(--primary);
+  color: var(--text);
   border-color: var(--primary);
   background: var(--primary-soft);
 }
@@ -263,7 +275,7 @@ body {
   border-radius: 50%;
   font-weight: 700;
   color: #fff;
-  background: linear-gradient(135deg, var(--primary), var(--danger));
+  background: linear-gradient(135deg, var(--primary-solid), var(--danger-solid));
 }
 
 .message-body {
@@ -280,6 +292,7 @@ body {
 
 .message-name {
   font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .message-date {
