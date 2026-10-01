@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -68,6 +69,13 @@ class MessageControllerTest {
                         .content("{\"text\":\"Hi\"}"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Message 99 not found"));
+    }
+
+    @Test
+    void unsupportedMethodReturns405InsteadOf500() throws Exception {
+        mockMvc.perform(patch("/api/messages/1"))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(jsonPath("$.message").exists());
     }
 
     @Test

@@ -47,18 +47,18 @@ Sample exam: Guestbook
 
 ## Checklist
 
-- [ ] B1 POST /api/messages {name, text} -> 201 with id, name, text, createdAt (server-set), updatedAt null
-- [ ] B2 GET /api/messages returns all messages ordered by createdAt desc
-- [ ] B3 PUT /api/messages/{id} {text} updates text (same text validation) and sets server-controlled updatedAt
-- [ ] B4 DELETE /api/messages/{id} -> 204
-- [ ] B5 Validation failure -> 400 JSON {"message": ...}; unknown id on PUT/DELETE -> 404 JSON {"message": ...}
-- [ ] B6 Service unit tests: create, edit, edit-missing (404), delete-missing (404)
-- [ ] F1 Single page lists messages with name, text, date; "(edited)" when updatedAt is set
-- [ ] F2 Form with name + message fields and "Post" button; new message prepended without reload
-- [ ] F3 Edit button turns text into input with Save / Cancel
-- [ ] F4 Delete button asks for confirmation (window.confirm), then removes message from list
-- [ ] F5 Any failed action shows the server's error message
-- [ ] D1 README with how to run backend and frontend
+- [x] B1 POST /api/messages {name, text} -> 201 with id, name, text, createdAt (server-set), updatedAt null
+- [x] B2 GET /api/messages returns all messages ordered by createdAt desc
+- [x] B3 PUT /api/messages/{id} {text} updates text (same text validation) and sets server-controlled updatedAt
+- [x] B4 DELETE /api/messages/{id} -> 204
+- [x] B5 Validation failure -> 400 JSON {"message": ...}; unknown id on PUT/DELETE -> 404 JSON {"message": ...}
+- [x] B6 Service unit tests: create, edit, edit-missing (404), delete-missing (404)
+- [x] F1 Single page lists messages with name, text, date; "(edited)" when updatedAt is set
+- [x] F2 Form with name + message fields and "Post" button; new message prepended without reload
+- [x] F3 Edit button turns text into input with Save / Cancel
+- [x] F4 Delete button asks for confirmation (window.confirm), then removes message from list
+- [x] F5 Any failed action shows the server's error message
+- [x] D1 README with how to run backend and frontend
 
 ## Clarifications / assumptions
 
@@ -69,3 +69,11 @@ Sample exam: Guestbook
 - Frontend calls the backend through the Vite dev-server proxy (`/api` -> `http://localhost:8080`), so no CORS config is needed.
 - No pagination on GET, per the exam's out-of-scope list (overrides the paging convention).
 - Primary key is an auto-increment Long.
+- Timestamps are set by the service from an injected `Clock`, not `@CreationTimestamp`/`@UpdateTimestamp`: Hibernate's `@UpdateTimestamp` also fills the field on insert, which would mark every new message "(edited)".
+- Name is capped at 100 characters (not in the prompt) so an over-long name is a 400 instead of a database error.
+- Framework errors (405, 415, unknown path) keep their own status and use the same `{"message"}` body; only genuinely unexpected errors become 500.
+- Spring Boot 4.1.1 (current Initializr default) on Java 21 rather than Boot 3; it satisfies "Java 17+, Spring Boot".
+
+## Closing note
+
+All checklist items are built and tested. Backend: 13 tests (6 service, 6 controller, 1 context). Frontend: 22 tests across the API layer, `MessageForm`, `MessageItem` and `App`. Every endpoint was also smoke-tested end to end through the Vite proxy against the running backend. Self-review: the React reviewer found nothing blocking; the Java reviewer flagged the catch-all handler masking framework 4xx errors as 500, which is fixed and covered by a test. Nothing was cut for time. Run instructions are in `README.md`.

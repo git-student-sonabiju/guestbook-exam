@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,9 +47,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleUnexpected(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleUnexpected(Exception ex) {
+        if (ex instanceof org.springframework.web.ErrorResponse frameworkError) {
+            HttpStatusCode status = frameworkError.getStatusCode();
+            String detail = frameworkError.getBody().getDetail();
+            return ResponseEntity.status(status).body(new ErrorResponse(detail != null ? detail : "Request failed"));
+        }
         log.error("Unexpected error", ex);
-        return new ErrorResponse("Unexpected server error");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Unexpected server error"));
     }
 }
